@@ -166,7 +166,8 @@ async function getUserPosts(userId) {
     try {
         var response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}/posts`);
         var posts = await response.text();
-        return JSON.parse(posts);
+        var result = JSON.parse(posts);
+        return result;
     }
     catch (ex) {
         console.error("Could not get posts for user " + userId, ex);
@@ -276,13 +277,17 @@ function toggleComments(e, postId) {
         return undefined;
     }
     e.target.listener = true;
-    postId = e.target.dataset.postId;
+    postId ??= e.target.dataset.postId;
     var section = toggleCommentSection(postId);
     var button = toggleCommentButton(postId);
     return [section, button];
 }
 
 async function refreshPosts(postsJson) {
+    if (!postsJson) {
+        return undefined;
+    }
+
     var removedButtons = removeButtonListeners();
     var parent = deleteChildElements(document.querySelector("main"));
     var fragment = await displayPosts(postsJson);
@@ -292,6 +297,10 @@ async function refreshPosts(postsJson) {
 }
 
 async function selectMenuChangeEventHandler(e) {
+    if (!e) {
+        return undefined;
+    }
+    console.log("selectMenuChangeEvent",e);
     var selectMenu = document.getElementById("selectMenu");
     selectMenu.setAttribute("disabled","disabled");
     var userId = e.target.value || 1;
