@@ -12,7 +12,7 @@ function createElemWithText(elementType, textContent, className) {
     if (className) {
         element.className = className;
     }
-    element.innerText = textContent;
+    element.textContent = textContent;
 
     return element;
 }
@@ -300,13 +300,16 @@ async function selectMenuChangeEventHandler(e) {
     if (!e) {
         return undefined;
     }
-    console.log("selectMenuChangeEvent",e);
     var selectMenu = document.getElementById("selectMenu");
     selectMenu.setAttribute("disabled","disabled");
-    var userId = e.target.value || 1;
+    var userId = e.target?.value || 1;
+    if (userId == "Employees") {
+        userId = "1"
+    }
     var posts = await getUserPosts(userId);
     var refreshResult = await refreshPosts(posts);
     selectMenu.removeAttribute("disabled");
+    console.log("selectMenuChangeEvent",e,"result",userId, posts, refreshResult);
     return [userId, posts, refreshResult];
 }
 
